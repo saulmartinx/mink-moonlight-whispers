@@ -8,35 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Night stealth theme - atmospheric mink game */
+    --background: 215 20% 8%;
+    --foreground: 210 20% 90%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 215 25% 12%;
+    --card-foreground: 210 20% 90%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 215 25% 12%;
+    --popover-foreground: 210 20% 90%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 168 76% 42%;
+    --primary-foreground: 215 20% 8%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 215 20% 16%;
+    --secondary-foreground: 210 20% 90%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 215 20% 16%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 168 50% 30%;
+    --accent-foreground: 210 20% 90%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 90%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 215 20% 20%;
+    --input: 215 20% 20%;
+    --ring: 168 76% 42%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Game-specific colors */
+    --forest-dark: 120 40% 8%;
+    --forest-medium: 120 30% 15%;
+    --moonlight: 210 50% 70%;
+    --mink-brown: 25 40% 20%;
+    --danger-red: 0 70% 50%;
+    --safe-green: 120 60% 40%;
+    --shadow: 215 30% 5%;
+    --light-cone: 50 80% 60%;
+    
+    /* Atmospheric gradients */
+    --gradient-night: linear-gradient(180deg, hsl(215 30% 5%) 0%, hsl(215 25% 8%) 50%, hsl(120 20% 6%) 100%);
+    --gradient-moonbeam: radial-gradient(circle, hsl(210 50% 70% / 0.3) 0%, transparent 70%);
+    --gradient-danger: radial-gradient(circle, hsl(0 70% 50% / 0.4) 0%, transparent 60%);
+    
+    /* Animations */
+    --transition-stealth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     --sidebar-background: 0 0% 98%;
 
@@ -102,4 +121,106 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer components {
+  /* Game Canvas */
+  .game-canvas {
+    background: var(--gradient-night);
+    position: relative;
+    overflow: hidden;
+    cursor: crosshair;
+  }
+  
+  /* Mink Character */
+  .mink {
+    transition: var(--transition-stealth);
+    filter: drop-shadow(0 2px 4px hsl(var(--shadow) / 0.8));
+  }
+  
+  .mink.hidden {
+    opacity: 0.3;
+  }
+  
+  /* Light Detection Zones */
+  .light-zone {
+    background: var(--gradient-danger);
+    border-radius: 50%;
+    animation: pulse-danger 2s infinite;
+  }
+  
+  .moonbeam {
+    background: var(--gradient-moonbeam);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  
+  /* UI Elements */
+  .stealth-meter {
+    background: linear-gradient(90deg, 
+      hsl(var(--safe-green)) 0%, 
+      hsl(var(--light-cone)) 50%, 
+      hsl(var(--danger-red)) 100%);
+  }
+  
+  .game-ui {
+    backdrop-filter: blur(8px);
+    background: hsl(var(--card) / 0.8);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+  
+  /* Interactive Elements */
+  .clickable {
+    cursor: pointer;
+    transition: var(--transition-stealth);
+  }
+  
+  .clickable:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+  
+  /* Story Text */
+  .story-text {
+    text-shadow: 0 1px 3px hsl(var(--shadow));
+    animation: fade-in-text 0.8s ease-out;
+  }
+  
+  /* Audio Visualizer */
+  .sound-wave {
+    border-radius: 50%;
+    animation: ripple 1.5s infinite;
+  }
+}
+
+@layer utilities {
+  /* Animations */
+  @keyframes pulse-danger {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+  }
+  
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.4; }
+  }
+  
+  @keyframes fade-in-text {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes ripple {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+  
+  /* Game-specific utilities */
+  .bg-night { background: var(--gradient-night); }
+  .text-moonlight { color: hsl(var(--moonlight)); }
+  .text-mink { color: hsl(var(--mink-brown)); }
+  .text-danger { color: hsl(var(--danger-red)); }
+  .text-safe { color: hsl(var(--safe-green)); }
+  .bg-forest-dark { background-color: hsl(var(--forest-dark)); }
+  .bg-forest-medium { background-color: hsl(var(--forest-medium)); }
+  .bg-mink { background-color: hsl(var(--mink-brown)); }
 }
